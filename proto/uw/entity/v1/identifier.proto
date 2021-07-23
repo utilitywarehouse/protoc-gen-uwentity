@@ -8,7 +8,7 @@ option go_package = "github.com/utilitywarehouse/protoc-gen-uwentity/gen/uw/enti
 
 extend google.protobuf.MessageOptions {
   // Skip checking or generating for this message
-  bool ignore = 75500;
+  bool ignore = 75630;
 }
 
 extend google.protobuf.FieldOptions {
