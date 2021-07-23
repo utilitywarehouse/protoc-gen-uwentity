@@ -44,6 +44,11 @@ func main() {
 
 			var idents []identifier
 			for _, msg := range file.Messages {
+				msgopts := msg.Desc.Options().(*descriptorpb.MessageOptions)
+				if proto.GetExtension(msgopts, entitypb.E_Ignore).(bool) {
+					continue
+				}
+
 				for _, field := range msg.Fields {
 					fieldopts := field.Desc.Options().(*descriptorpb.FieldOptions)
 					if !proto.GetExtension(fieldopts, entitypb.E_Identifier).(bool) {

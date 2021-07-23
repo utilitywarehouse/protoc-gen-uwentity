@@ -6,6 +6,11 @@ import "google/protobuf/descriptor.proto";
 
 option go_package = "github.com/utilitywarehouse/protoc-gen-uwentity/gen/uw/entity/v1;entity";
 
+extend google.protobuf.MessageOptions {
+  // Skip checking or generating for this message
+  bool ignore = 75500;
+}
+
 extend google.protobuf.FieldOptions {
   // Mark as the field you want to generate the getter for
   bool identifier = 75530;
