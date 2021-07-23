@@ -26,3 +26,10 @@ message UserCreatedEvent {
 }
 ```
 
+## Enforcement
+
+Any protobuf message that has the `Event` suffix will be checked that an identifier has been set.
+You can skip this check by setting `option (uw.entity.v1.ignore) = true;` on the message.
+
+If you want to restrict which directories are enforced, you can pass `enforce-dir=<path>` param to
+protoc-gen-uwentity and only protobuf messages that live under that directory will be checked.

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/compiler/protogen"
@@ -22,13 +23,27 @@ func (m *%s) GetEntityIdentifier() string {
 }
 `
 
+// If set, then only these directories will raise errors for messages that do not set an identifier
+// By default all messages are checked with the `Event` suffix
+var paramEnforceDirs []string
+
 type identifier struct {
 	Msg        *protogen.Message
 	Identifier *protogen.Field
 }
 
 func main() {
-	protogen.Options{}.Run(func(gen *protogen.Plugin) error {
+	protogen.Options{
+		ParamFunc: func(name, value string) error {
+			switch name {
+			case "enforce-dir":
+				paramEnforceDirs = append(paramEnforceDirs, value)
+			default:
+				return errors.Errorf("invalid param: %s", name)
+			}
+			return nil
+		},
+	}.Run(func(gen *protogen.Plugin) error {
 		for _, file := range gen.Files {
 			if !file.Generate {
 				continue
@@ -43,13 +58,18 @@ func main() {
 			output.P("package ", file.GoPackageName)
 
 			var idents []identifier
+
 			for _, msg := range file.Messages {
+				// Ingore messages with `uw.entity.v1.ignore = true`
 				msgopts := msg.Desc.Options().(*descriptorpb.MessageOptions)
 				if proto.GetExtension(msgopts, entitypb.E_Ignore).(bool) {
 					continue
 				}
 
+				var hasEntityIdentifier bool
+
 				for _, field := range msg.Fields {
+					// Skip field that don't have `uw.entity.v1.identifer = true`
 					fieldopts := field.Desc.Options().(*descriptorpb.FieldOptions)
 					if !proto.GetExtension(fieldopts, entitypb.E_Identifier).(bool) {
 						continue
@@ -65,7 +85,33 @@ func main() {
 					default:
 						return errors.Errorf("unsupported field type on %s: %s", msg.Desc.Name(), kind)
 					}
+
+					hasEntityIdentifier = true
 					break
+				}
+
+				// Check that each event has set the identifier
+				// Pass `enforce-dir=<path>` to only check these directories & skip others
+				// Set message option `(uw.entity.v1.ignore) = true` to skip an individual message
+				if !hasEntityIdentifier && strings.HasSuffix(msg.GoIdent.GoName, "Event") {
+					if len(paramEnforceDirs) > 0 {
+						var skipEnforce bool
+						for _, dir := range paramEnforceDirs {
+							if !strings.HasPrefix(file.Desc.Path(), dir) {
+								skipEnforce = true
+								break
+							}
+						}
+						if skipEnforce {
+							continue
+						}
+					}
+
+					return errors.Errorf(
+						"%s/%s: `uw.entity.v1.identifier` not set on event",
+						file.Desc.Path(),
+						msg.GoIdent.GoName,
+					)
 				}
 			}
 
