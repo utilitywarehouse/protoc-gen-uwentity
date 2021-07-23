@@ -53,7 +53,7 @@ jobs:
             go-1.16-proto_generate-
       - name: Generate protofiles
         run: |
-          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26.0
+          go install google.golang.org/protobuf/cmd/protoc-gen-go
           buf generate
       - name: Check for changes
         run: git add ./gen && git diff --staged --exit-code
