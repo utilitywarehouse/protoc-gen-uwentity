@@ -67,7 +67,7 @@ func main() {
 			if len(idents) == 0 {
 				// file contains no identifiers
 				output.Skip()
-				return nil
+				continue
 			}
 
 			for _, ident := range idents {
