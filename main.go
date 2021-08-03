@@ -127,7 +127,7 @@ func main() {
 					field += ".String()"
 				}
 
-				output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), ident.Identifier.GoName))
+				output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), field))
 			}
 		}
 
