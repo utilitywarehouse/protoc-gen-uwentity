@@ -77,7 +77,7 @@ func main() {
 
 					kind := field.Desc.Kind()
 					switch kind {
-					case protoreflect.StringKind:
+					case protoreflect.StringKind, protoreflect.EnumKind:
 						idents = append(idents, identifier{
 							Msg:        msg,
 							Identifier: field,
@@ -122,6 +122,11 @@ func main() {
 			}
 
 			for _, ident := range idents {
+				field := ident.Identifier.GoName
+				if ident.Identifier.Enum != nil {
+					field += ".String()"
+				}
+
 				output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), ident.Identifier.GoName))
 			}
 		}
