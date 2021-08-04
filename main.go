@@ -75,16 +75,10 @@ func main() {
 						continue
 					}
 
-					kind := field.Desc.Kind()
-					switch kind {
-					case protoreflect.StringKind:
-						idents = append(idents, identifier{
-							Msg:        msg,
-							Identifier: field,
-						})
-					default:
-						return errors.Errorf("unsupported field type on %s: %s", msg.Desc.Name(), kind)
-					}
+					idents = append(idents, identifier{
+						Msg:        msg,
+						Identifier: field,
+					})
 
 					hasEntityIdentifier = true
 					break
@@ -121,8 +115,16 @@ func main() {
 				continue
 			}
 
+			// output identifier accessing methods, checking that we support the field type
 			for _, ident := range idents {
-				output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), ident.Identifier.GoName))
+				switch ident.Identifier.Desc.Kind() {
+				case protoreflect.StringKind:
+					output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), ident.Identifier.GoName))
+				case protoreflect.EnumKind:
+					output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), ident.Identifier.GoName+".String()"))
+				default:
+					return errors.Errorf("unsupported field type on %s: %s", ident.Msg.Desc.Name(), ident.Identifier.Desc.Kind())
+				}
 			}
 		}
 
