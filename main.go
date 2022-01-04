@@ -1,10 +1,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
-	"github.com/pkg/errors"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -13,13 +13,15 @@ import (
 	entitypb "github.com/utilitywarehouse/protoc-gen-uwentity/gen/uw/entity/v1"
 )
 
+var (
+	errIdentifierNotFound = errors.New("identifier not found")
+	errUnsupportedField   = errors.New("unsupported field type")
+)
+
 var tmpl = `
 // GetEntityIdentifier returns the value from the field marked as the identifier
 func (m *%s) GetEntityIdentifier() string {
-	if m != nil {
-		return m.%s
-	}
-	return ""
+	return m.%s
 }
 `
 
@@ -28,8 +30,10 @@ func (m *%s) GetEntityIdentifier() string {
 var paramEnforceDirs []string
 
 type identifier struct {
-	Msg        *protogen.Message
-	Identifier *protogen.Field
+	// the Message that the GetEntityIdentifier method will be added to
+	message string
+	// the Field on the message which should be used as the identifier
+	identifier string
 }
 
 func main() {
@@ -39,7 +43,7 @@ func main() {
 			case "enforce-dir":
 				paramEnforceDirs = append(paramEnforceDirs, value)
 			default:
-				return errors.Errorf("invalid param: %s", name)
+				return fmt.Errorf("invalid param: %s", name)
 			}
 			return nil
 		},
@@ -66,46 +70,36 @@ func main() {
 					continue
 				}
 
-				var hasEntityIdentifier bool
-
-				for _, field := range msg.Fields {
-					// Skip field that don't have `uw.entity.v1.identifer = true`
-					fieldopts := field.Desc.Options().(*descriptorpb.FieldOptions)
-					if !proto.GetExtension(fieldopts, entitypb.E_Identifier).(bool) {
-						continue
-					}
-
-					idents = append(idents, identifier{
-						Msg:        msg,
-						Identifier: field,
-					})
-
-					hasEntityIdentifier = true
-					break
-				}
-
-				// Check that each event has set the identifier
-				// Pass `enforce-dir=<path>` to only check these directories & skip others
-				// Set message option `(uw.entity.v1.ignore) = true` to skip an individual message
-				if !hasEntityIdentifier && strings.HasSuffix(msg.GoIdent.GoName, "Event") {
-					if len(paramEnforceDirs) > 0 {
-						var skipEnforce bool
-						for _, dir := range paramEnforceDirs {
-							if !strings.HasPrefix(file.Desc.Path(), dir) {
-								skipEnforce = true
-								break
+				messageIdentifier, err := getMessageIdentifier(string(msg.Desc.Name()), msg)
+				switch {
+				default:
+					return err
+				case errors.Is(err, nil):
+					idents = append(idents, messageIdentifier)
+				case errors.Is(err, errIdentifierNotFound):
+					// Check that each event has set the identifier
+					// Pass `enforce-dir=<path>` to only check these directories & skip others
+					// Set message option `(uw.entity.v1.ignore) = true` to skip an individual message
+					if strings.HasSuffix(msg.GoIdent.GoName, "Event") {
+						if len(paramEnforceDirs) > 0 {
+							var skipEnforce bool
+							for _, dir := range paramEnforceDirs {
+								if !strings.HasPrefix(file.Desc.Path(), dir) {
+									skipEnforce = true
+									break
+								}
+							}
+							if skipEnforce {
+								continue
 							}
 						}
-						if skipEnforce {
-							continue
-						}
-					}
 
-					return errors.Errorf(
-						"%s/%s: `uw.entity.v1.identifier` not set on event",
-						file.Desc.Path(),
-						msg.GoIdent.GoName,
-					)
+						return fmt.Errorf(
+							"%s/%s: `uw.entity.v1.identifier` not set on event",
+							file.Desc.Path(),
+							msg.GoIdent.GoName,
+						)
+					}
 				}
 			}
 
@@ -117,17 +111,44 @@ func main() {
 
 			// output identifier accessing methods, checking that we support the field type
 			for _, ident := range idents {
-				switch ident.Identifier.Desc.Kind() {
-				case protoreflect.StringKind:
-					output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), ident.Identifier.GoName))
-				case protoreflect.EnumKind:
-					output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), ident.Identifier.GoName+".String()"))
-				default:
-					return errors.Errorf("unsupported field type on %s: %s", ident.Msg.Desc.Name(), ident.Identifier.Desc.Kind())
-				}
+				output.P(fmt.Sprintf(tmpl, ident.message, ident.identifier))
 			}
 		}
 
 		return nil
 	})
+}
+
+func getMessageIdentifier(entity string, msg *protogen.Message, fields ...string) (identifier, error) {
+	for _, field := range msg.Fields {
+		// Skip field that don't have `uw.entity.v1.identifer = true`
+		fieldopts := field.Desc.Options().(*descriptorpb.FieldOptions)
+
+		if !proto.GetExtension(fieldopts, entitypb.E_Identifier).(bool) {
+			continue
+		}
+
+		if field.Desc.Cardinality() == protoreflect.Repeated {
+			return identifier{}, fmt.Errorf("repeated fields are not supported on %s: %s: %w", entity, field.Desc.Kind(), errUnsupportedField)
+		}
+
+		var value string
+		switch field.Desc.Kind() {
+		case protoreflect.StringKind:
+			value = fmt.Sprintf("Get%s()", field.GoName)
+		case protoreflect.EnumKind:
+			value = fmt.Sprintf("Get%s().String()", field.GoName)
+		case protoreflect.MessageKind:
+			return getMessageIdentifier(entity, field.Message, append(fields, fmt.Sprintf("Get%s()", field.GoName))...)
+		default:
+			return identifier{}, fmt.Errorf("unsupported field type on %s: %s: %w", entity, field.Desc.Kind(), errUnsupportedField)
+		}
+
+		return identifier{
+			message:    entity,
+			identifier: strings.Join(append(fields, value), "."),
+		}, nil
+	}
+
+	return identifier{}, errIdentifierNotFound
 }
