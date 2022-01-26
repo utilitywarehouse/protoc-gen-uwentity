@@ -7,14 +7,27 @@ is your source of truth.
 
 **1) Pull in the extended field options**
 
-[buf](https://buf.build/) makes that super easy!
+[buf](https://buf.build/) makes that super easy! 
 
+Add `protoc-gen-uwentity` to your project dependencies in your `buf.yaml` file:
 ```yaml
 version: v1beta1
 name: buf.build/utilitywarehouse/some-project
 deps:
   - buf.build/utilitywarehouse/protoc-gen-uwentity
 ```
+
+and add it as a plugin in `buf.gen.yaml`:
+```yaml
+version: v1
+plugins:
+  # ... your other plugins
+  - name: uwentity
+    out: gen/go
+    opt:
+      - paths=source_relative
+```
+
 
 **2) Annotate the field**
 
