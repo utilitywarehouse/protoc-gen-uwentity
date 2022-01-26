@@ -28,6 +28,10 @@ plugins:
       - paths=source_relative
 ```
 
+and finally install the plugin by running
+```bash
+$ go install github.com/utilitywarehouse/protoc-gen-uwentity
+```
 
 **2) Annotate the field**
 
