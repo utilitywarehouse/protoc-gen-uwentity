@@ -22,15 +22,10 @@ and add it as a plugin in `buf.gen.yaml`:
 version: v1
 plugins:
   # ... your other plugins
-  - name: uwentity
+  - remote: buf.build/utilitywarehouse/plugins/uwentity:v0.4.0-1
     out: gen/go
     opt:
       - paths=source_relative
-```
-
-and finally install the plugin by running
-```bash
-$ go install github.com/utilitywarehouse/protoc-gen-uwentity
 ```
 
 **2) Annotate the field**
@@ -50,3 +45,16 @@ You can skip this check by setting `option (uw.entity.v1.ignore) = true;` on the
 
 If you want to restrict which directories are enforced, you can pass `enforce-dir=<path>` param to
 protoc-gen-uwentity and only protobuf messages that live under that directory will be checked.
+
+## Buf plugin
+
+**1) Build the plugin**
+
+```bash
+docker build -f Dockerfile.buf.plugin -t plugins.buf.build/utilitywarehouse/uwentity:v{tag}-{increment}
+```
+
+**2) Push the plugin**
+```bash
+docker push plugins.buf.build/utilitywarehouse/uwentity:v{tag}-{increment}
+```
