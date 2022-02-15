@@ -1,0 +1,23 @@
+# Build plugin
+FROM golang:1.17-alpine as builder
+
+WORKDIR /app
+
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
+
+COPY *.go ./
+COPY gen ./gen
+
+RUN go build -o /protoc-gen-uwentity
+
+# Run plugin
+FROM scratch
+
+LABEL "build.buf.plugins.runtime_library_versions.0.name"="google.golang.org/protobuf"
+LABEL "build.buf.plugins.runtime_library_versions.0.version"="v1.27.1"
+
+COPY --from=builder /protoc-gen-uwentity /
+
+ENTRYPOINT ["/protoc-gen-uwentity"]
