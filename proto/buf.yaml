@@ -1,0 +1,8 @@
+version: v1
+name: buf.build/utilitywarehouse/protoc-gen-uwentity
+lint:
+  use:
+    - DEFAULT
+breaking:
+  use:
+    - FILE

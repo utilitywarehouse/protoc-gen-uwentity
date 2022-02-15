@@ -1,5 +1,0 @@
-version: v1beta1
-name: buf.build/utilitywarehouse/protoc-gen-uwentity
-build:
-  roots:
-    - proto

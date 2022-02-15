@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pkg/errors"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -39,7 +38,7 @@ func main() {
 			case "enforce-dir":
 				paramEnforceDirs = append(paramEnforceDirs, value)
 			default:
-				return errors.Errorf("invalid param: %s", name)
+				return fmt.Errorf("invalid param: %s", name)
 			}
 			return nil
 		},
@@ -101,7 +100,7 @@ func main() {
 						}
 					}
 
-					return errors.Errorf(
+					return fmt.Errorf(
 						"%s/%s: `uw.entity.v1.identifier` not set on event",
 						file.Desc.Path(),
 						msg.GoIdent.GoName,
@@ -123,7 +122,7 @@ func main() {
 				case protoreflect.EnumKind:
 					output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), ident.Identifier.GoName+".String()"))
 				default:
-					return errors.Errorf("unsupported field type on %s: %s", ident.Msg.Desc.Name(), ident.Identifier.Desc.Kind())
+					return fmt.Errorf("unsupported field type on %s: %s", ident.Msg.Desc.Name(), ident.Identifier.Desc.Kind())
 				}
 			}
 		}
