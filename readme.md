@@ -22,7 +22,7 @@ and add it as a plugin in `buf.gen.yaml`:
 version: v1
 plugins:
   # ... your other plugins
-  - remote: buf.build/utilitywarehouse/plugins/uwentity:v0.5.0
+  - remote: buf.build/utilitywarehouse/plugins/uwentity:v1.0.0
     out: gen/go
     opt:
       - paths=source_relative
