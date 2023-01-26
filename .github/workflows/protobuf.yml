@@ -2,7 +2,7 @@ name: Protobuf
 on:
   push:
 env:
-  BUF_VERSION: "1.12.02"
+  BUF_VERSION: "1.12.0"
   GO_VERSION: "^1.17"
 jobs:
   proto_breaking:
