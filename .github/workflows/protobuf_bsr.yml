@@ -3,17 +3,25 @@ on:
   push:
     branches:
       - main
-env:
-  BUF_VERSION: "1.12.0"
 jobs:
   bsr_push:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: bufbuild/buf-setup-action@v1
+      - uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
         with:
-          version: ${{ env.BUF_VERSION }}
-          github_token: ${{ github.token }}
+          go-version-file: 'go.mod'
+          cache: true
+      - name: Setup Buf cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/buf
+          key: ${{ runner.os }}-buf-${{ inputs.version }}-${{ hashFiles('proto/buf.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-buf-
+      - name: Install Buf
+        run: go install github.com/bufbuild/buf/cmd/buf
       - uses: bufbuild/buf-push-action@v1
         with:
           buf_token: ${{ secrets.BUF_TOKEN }}
