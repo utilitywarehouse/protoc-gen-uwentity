@@ -4,3 +4,9 @@ install:
 generate: build
 build:
 	buf generate
+
+lint:
+	buf lint
+
+format:
+	buf format proto -w
