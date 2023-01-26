@@ -17,12 +17,12 @@ deps:
   - buf.build/utilitywarehouse/protoc-gen-uwentity
 ```
 
-and add it as a plugin in `buf.gen.yaml`:
+Install locally the plugin and add it to `buf.gen.yaml`:
 ```yaml
 version: v1
 plugins:
   # ... your other plugins
-  - remote: buf.build/utilitywarehouse/plugins/uwentity:v1.0.0
+  - name: uwentity
     out: gen/go
     opt:
       - paths=source_relative
