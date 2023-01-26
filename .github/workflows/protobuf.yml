@@ -18,6 +18,7 @@ jobs:
       - uses: bufbuild/buf-setup-action@v1
         with:
           version: ${{ env.BUF_VERSION }}
+          github_token: ${{ github.token }}
       - uses: bufbuild/buf-breaking-action@v1
         env:
           BUF_INPUT_HTTPS_USERNAME: ${{ github.actor }}
@@ -33,6 +34,7 @@ jobs:
       - uses: bufbuild/buf-setup-action@v1
         with:
           version: ${{ env.BUF_VERSION }}
+          github_token: ${{ github.token }}
       - uses: bufbuild/buf-lint-action@v1
         with:
           buf_token: ${{ secrets.BUF_TOKEN }}
@@ -49,6 +51,7 @@ jobs:
       - uses: bufbuild/buf-setup-action@v1
         with:
           version: ${{ env.BUF_VERSION }}
+          github_token: ${{ github.token }}
       - uses: actions/cache@v2
         with:
           path: |
