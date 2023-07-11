@@ -111,19 +111,6 @@ func main() {
 				output.Skip()
 				continue
 			}
-
-			// output identifier accessing methods, checking that we support the field type
-			for _, ident := range idents {
-				output.P(fmt.Sprintf(tmpl, ident.message, ident.identifier))
-				switch ident.Identifier.Desc.Kind() {
-				case protoreflect.StringKind:
-					output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), ident.Identifier.GoName))
-				case protoreflect.EnumKind:
-					output.P(fmt.Sprintf(tmpl, ident.Msg.Desc.Name(), ident.Identifier.GoName+".String()"))
-				default:
-					return fmt.Errorf("unsupported field type on %s: %s", ident.Msg.Desc.Name(), ident.Identifier.Desc.Kind())
-				}
-			}
 		}
 
 		return nil

@@ -10,3 +10,10 @@ lint:
 
 format:
 	buf format proto -w
+
+clean:
+	rm -rf testdata/go/*
+test: clean
+	go build -o protoc-gen-uwentity main.go
+	protoc --uwentity_out=testdata/go --go_out=testdata/go testdata/*.proto
+	go test ./...
