@@ -7,7 +7,6 @@ import (
 )
 
 func TestSimpleGetEntityIdentifier(t *testing.T) {
-
 	msg := &data.SimpleMessage{
 		Id: "test",
 	}

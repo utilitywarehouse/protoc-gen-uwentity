@@ -142,6 +142,17 @@ func getMessageIdentifier(entity string, msg *protogen.Message, fields ...string
 		case protoreflect.EnumKind:
 			value = fmt.Sprintf("Get%s().String()", field.GoName)
 		case protoreflect.MessageKind:
+			nestedIdentifier := false
+			// check if the nested message has an identifier
+			for _, f := range field.Message.Fields {
+				if proto.GetExtension(f.Desc.Options().(*descriptorpb.FieldOptions), entitypb.E_Identifier).(bool) {
+					nestedIdentifier = true
+				}
+			}
+
+			if !nestedIdentifier {
+				return identifier{}, fmt.Errorf("nested messages must have an identifier on %s: %s: %w", entity, field.Desc.Kind(), errUnsupportedField)
+			}
 			value = fmt.Sprintf("Get%s().GetEntityIdentifier()", field.GoName)
 			return identifier{
 				message:    entity,
