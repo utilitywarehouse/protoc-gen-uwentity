@@ -1,0 +1,30 @@
+# Build plugin  
+ARG GO_VERSION=1.17
+ARG PROTOBUF_GO_VERSION=v1.27.1
+
+FROM golang:$GO_VERSION as builder
+ARG PROTOBUF_GO_VERSION
+
+ENV GOOS=linux GOARCH=amd64 CGO_ENABLED=0
+
+WORKDIR /app
+
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
+
+COPY *.go ./
+COPY gen ./gen
+
+RUN go build -o /protoc-gen-uwentity
+
+# Run plugin
+FROM scratch
+ARG PROTOBUF_GO_VERSION
+
+LABEL "build.buf.plugins.runtime_library_versions.0.name"="google.golang.org/protobuf"
+LABEL "build.buf.plugins.runtime_library_versions.0.version"="$PROTOBUF_GO_VERSION"
+
+COPY --from=builder /protoc-gen-uwentity /
+
+ENTRYPOINT ["/protoc-gen-uwentity"]

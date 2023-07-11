@@ -2,58 +2,109 @@ name: Protobuf
 on:
   push:
 jobs:
-  proto_breaking:
+  breaking:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Rebase against main
-        run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git rebase origin/main
-          git branch -f main origin/main
-      - uses: bufbuild/buf-setup-action@v0.1.0
+      - uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
         with:
-          version: "0.44.0"
-      - uses: bufbuild/buf-breaking-action@v0.2.0
-        env:
-          BUF_INPUT_HTTPS_USERNAME: ${{ github.actor }}
-          BUF_INPUT_HTTPS_PASSWORD: ${{ github.token }}
+          go-version-file: 'go.mod'
+          cache: true
+      - name: Setup Buf cache
+        uses: actions/cache@v3
         with:
-          against: ".git#branch=main"
+          path: ~/.cache/buf
+          key: ${{ runner.os }}-buf-${{ inputs.version }}-${{ hashFiles('proto/buf.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-buf-
+      - name: Install Buf
+        run: go install github.com/bufbuild/buf/cmd/buf
+      - uses: bufbuild/buf-breaking-action@v1
+        with:
+          against: "https://github.com/utilitywarehouse/protoc-gen-uwentity.git#branch=main"
           buf_token: ${{ secrets.BUF_TOKEN }}
-          github_token: ${{ github.token }}
-  proto_lint:
+  generate:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: bufbuild/buf-setup-action@v0.1.0
-        with:
-          version: "0.44.0"
-      - uses: bufbuild/buf-lint-action@v0.2.0
-        with:
-          buf_token: ${{ secrets.BUF_TOKEN }}
-          github_token: ${{ github.token }}
-  proto_generate:
-    runs-on: ubuntu-latest
-    container: "golang:1.16"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - uses: bufbuild/buf-setup-action@v0.1.0
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
         with:
-          version: "0.44.0"
-      - uses: actions/cache@v2
+          go-version-file: 'go.mod'
+          cache: true
+      - name: Setup Buf cache
+        uses: actions/cache@v3
         with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: go-1.16-proto_generate-${{ hashFiles('**/go.sum') }}
+          path: ~/.cache/buf
+          key: ${{ runner.os }}-buf-${{ inputs.version }}-${{ hashFiles('proto/buf.lock') }}
           restore-keys: |
-            go-1.16-proto_generate-
+            ${{ runner.os }}-buf-
+      - name: Install tools
+        run: make install
       - name: Generate protofiles
-        run: |
-          go install google.golang.org/protobuf/cmd/protoc-gen-go
-          buf generate
+        env:
+          BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
+        run: make generate
       - name: Check for changes
-        run: git add ./gen && git diff --staged --exit-code
+        run: git diff --exit-code
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - name: Setup Buf cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/buf
+          key: ${{ runner.os }}-buf-${{ inputs.version }}-${{ hashFiles('proto/buf.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-buf-
+      - name: Install Buf
+        run: go install github.com/bufbuild/buf/cmd/buf
+      - uses: bufbuild/buf-lint-action@v1
+        with:
+          buf_token: ${{ secrets.BUF_TOKEN }}
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - name: Setup Buf cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/buf
+          key: ${{ runner.os }}-buf-${{ inputs.version }}-${{ hashFiles('proto/buf.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-buf-
+      - name: Install Buf
+        run: go install github.com/bufbuild/buf/cmd/buf
+      - name: Format
+        run: make format
+      - name: Check for changes
+        run: git diff --exit-code
+  mod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - name: Tidy modules
+        run: go mod tidy
+      - name: Check for changes
+        run: git add . && git diff --staged --exit-code
