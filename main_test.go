@@ -2,24 +2,24 @@ package main
 
 import (
 	"github.com/stretchr/testify/require"
-	"github.com/utilitywarehouse/protoc-gen-uwentity/testdata/go/github.com/utilitywarehouse/protoc-gen-uwentity/testdata"
+	"github.com/utilitywarehouse/protoc-gen-uwentity/testgen/test/data"
 	"testing"
 )
 
 func TestSimpleGetEntityIdentifier(t *testing.T) {
-	msg := &testdata.SimpleMessage{
+
+	msg := &data.SimpleMessage{
 		Id: "test",
 	}
-
 	require.Equal(t, "test", msg.GetEntityIdentifier())
 }
 
 func TestNestedGetEntityIdentifier(t *testing.T) {
-	simpleMessage := &testdata.SimpleMessage{
+	simpleMessage := &data.SimpleMessage{
 		Id: "test",
 	}
 
-	msg := &testdata.NestedMessage{
+	msg := &data.NestedMessage{
 		SimpleMessage: simpleMessage,
 	}
 

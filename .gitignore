@@ -1,2 +1,2 @@
 protoc-gen-uwentity
-testdata/go/*
+testgen/
