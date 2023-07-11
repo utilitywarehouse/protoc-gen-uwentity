@@ -38,6 +38,21 @@ message UserCreatedEvent {
 }
 ```
 
+You can also choose to annotate a field of the type that has its own entity identifier already.
+In this case, the UserCreationVerifiedEvent will have the same identifier as the UserCreatedEvent.
+
+```protobuf
+import "uw/entity/v1/identifier.proto";
+
+message UserCreatedEvent {
+  string user_id = 1 [(uw.entity.v1.identifier) = true];
+}
+
+message UserCreationVerifiedEvent {
+  UserCreatedEvent user_created_event = 1 [(uw.entity.v1.identifier) = true];
+}
+```
+
 ## Enforcement
 
 Any protobuf message that has the `Event` suffix will be checked that an identifier has been set.
