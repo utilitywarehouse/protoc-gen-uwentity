@@ -142,8 +142,7 @@ func getMessageIdentifier(entity string, msg *protogen.Message, fields ...string
 		case protoreflect.EnumKind:
 			value = fmt.Sprintf("Get%s().String()", field.GoName)
 		case protoreflect.MessageKind:
-			// If the MessageKind field is marked as the identifier, return it as the identifier
-			value = fmt.Sprintf("Get%s()", field.GoName)
+			value = fmt.Sprintf("Get%s().GetEntityIdentifier()", field.GoName)
 			return identifier{
 				message:    entity,
 				identifier: strings.Join(append(fields, value), "."),
