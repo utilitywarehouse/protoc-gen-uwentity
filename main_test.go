@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/stretchr/testify/require"
-	"github.com/utilitywarehouse/protoc-gen-uwentity/testgen/test/data"
+	"github.com/utilitywarehouse/protoc-gen-uwentity/testgen/testgen/data"
 	"testing"
 )
 
