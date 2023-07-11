@@ -20,7 +20,7 @@ func TestNestedGetEntityIdentifier(t *testing.T) {
 	}
 
 	msg := &testdata.NestedMessage{
-		simpleMessage: simpleMessage,
+		SimpleMessage: simpleMessage,
 	}
 
 	require.Equal(t, "test", msg.GetEntityIdentifier())
