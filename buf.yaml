@@ -1,0 +1,4 @@
+version: v1
+name: buf.build/utilitywarehouse/protoc-gen-uwentity
+deps:
+  - buf.build/bufbuild/connect-go:v1.3.1
