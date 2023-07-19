@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.30.0
 // 	protoc        v3.21.12
-// source: testgen/testprotobuf/testdata/simple_message.proto
+// source: testgen/proto/testdata/simple_message.proto
 
 package testdata
 
@@ -32,7 +32,7 @@ type SimpleMessage struct {
 func (x *SimpleMessage) Reset() {
 	*x = SimpleMessage{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_testgen_testprotobuf_testdata_simple_message_proto_msgTypes[0]
+		mi := &file_testgen_proto_testdata_simple_message_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -45,7 +45,7 @@ func (x *SimpleMessage) String() string {
 func (*SimpleMessage) ProtoMessage() {}
 
 func (x *SimpleMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_testgen_testprotobuf_testdata_simple_message_proto_msgTypes[0]
+	mi := &file_testgen_proto_testdata_simple_message_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +58,7 @@ func (x *SimpleMessage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SimpleMessage.ProtoReflect.Descriptor instead.
 func (*SimpleMessage) Descriptor() ([]byte, []int) {
-	return file_testgen_testprotobuf_testdata_simple_message_proto_rawDescGZIP(), []int{0}
+	return file_testgen_proto_testdata_simple_message_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *SimpleMessage) GetId() string {
@@ -68,38 +68,38 @@ func (x *SimpleMessage) GetId() string {
 	return ""
 }
 
-var File_testgen_testprotobuf_testdata_simple_message_proto protoreflect.FileDescriptor
+var File_testgen_proto_testdata_simple_message_proto protoreflect.FileDescriptor
 
-var file_testgen_testprotobuf_testdata_simple_message_proto_rawDesc = []byte{
-	0x0a, 0x32, 0x74, 0x65, 0x73, 0x74, 0x67, 0x65, 0x6e, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61, 0x2f,
-	0x73, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2e, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x12, 0x08, 0x74, 0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61, 0x1a, 0x23,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x75, 0x77, 0x2f, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x2f,
-	0x76, 0x31, 0x2f, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x66, 0x69, 0x65, 0x72, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x22, 0x25, 0x0a, 0x0d, 0x53, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x4d, 0x65, 0x73,
-	0x73, 0x61, 0x67, 0x65, 0x12, 0x14, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x42, 0x04, 0xd0, 0xf0, 0x24, 0x01, 0x52, 0x02, 0x69, 0x64, 0x42, 0x0b, 0x5a, 0x09, 0x2f, 0x74,
-	0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+var file_testgen_proto_testdata_simple_message_proto_rawDesc = []byte{
+	0x0a, 0x2b, 0x74, 0x65, 0x73, 0x74, 0x67, 0x65, 0x6e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
+	0x74, 0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61, 0x2f, 0x73, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x5f,
+	0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x08, 0x74,
+	0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61, 0x1a, 0x23, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x75,
+	0x77, 0x2f, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x2f, 0x76, 0x31, 0x2f, 0x69, 0x64, 0x65, 0x6e,
+	0x74, 0x69, 0x66, 0x69, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x25, 0x0a, 0x0d,
+	0x53, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x14, 0x0a,
+	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x04, 0xd0, 0xf0, 0x24, 0x01, 0x52,
+	0x02, 0x69, 0x64, 0x42, 0x0b, 0x5a, 0x09, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x64, 0x61, 0x74, 0x61,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_testgen_testprotobuf_testdata_simple_message_proto_rawDescOnce sync.Once
-	file_testgen_testprotobuf_testdata_simple_message_proto_rawDescData = file_testgen_testprotobuf_testdata_simple_message_proto_rawDesc
+	file_testgen_proto_testdata_simple_message_proto_rawDescOnce sync.Once
+	file_testgen_proto_testdata_simple_message_proto_rawDescData = file_testgen_proto_testdata_simple_message_proto_rawDesc
 )
 
-func file_testgen_testprotobuf_testdata_simple_message_proto_rawDescGZIP() []byte {
-	file_testgen_testprotobuf_testdata_simple_message_proto_rawDescOnce.Do(func() {
-		file_testgen_testprotobuf_testdata_simple_message_proto_rawDescData = protoimpl.X.CompressGZIP(file_testgen_testprotobuf_testdata_simple_message_proto_rawDescData)
+func file_testgen_proto_testdata_simple_message_proto_rawDescGZIP() []byte {
+	file_testgen_proto_testdata_simple_message_proto_rawDescOnce.Do(func() {
+		file_testgen_proto_testdata_simple_message_proto_rawDescData = protoimpl.X.CompressGZIP(file_testgen_proto_testdata_simple_message_proto_rawDescData)
 	})
-	return file_testgen_testprotobuf_testdata_simple_message_proto_rawDescData
+	return file_testgen_proto_testdata_simple_message_proto_rawDescData
 }
 
-var file_testgen_testprotobuf_testdata_simple_message_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_testgen_testprotobuf_testdata_simple_message_proto_goTypes = []interface{}{
+var file_testgen_proto_testdata_simple_message_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_testgen_proto_testdata_simple_message_proto_goTypes = []interface{}{
 	(*SimpleMessage)(nil), // 0: testdata.SimpleMessage
 }
-var file_testgen_testprotobuf_testdata_simple_message_proto_depIdxs = []int32{
+var file_testgen_proto_testdata_simple_message_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -107,13 +107,13 @@ var file_testgen_testprotobuf_testdata_simple_message_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_testgen_testprotobuf_testdata_simple_message_proto_init() }
-func file_testgen_testprotobuf_testdata_simple_message_proto_init() {
-	if File_testgen_testprotobuf_testdata_simple_message_proto != nil {
+func init() { file_testgen_proto_testdata_simple_message_proto_init() }
+func file_testgen_proto_testdata_simple_message_proto_init() {
+	if File_testgen_proto_testdata_simple_message_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_testgen_testprotobuf_testdata_simple_message_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_testgen_proto_testdata_simple_message_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SimpleMessage); i {
 			case 0:
 				return &v.state
@@ -130,18 +130,18 @@ func file_testgen_testprotobuf_testdata_simple_message_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_testgen_testprotobuf_testdata_simple_message_proto_rawDesc,
+			RawDescriptor: file_testgen_proto_testdata_simple_message_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_testgen_testprotobuf_testdata_simple_message_proto_goTypes,
-		DependencyIndexes: file_testgen_testprotobuf_testdata_simple_message_proto_depIdxs,
-		MessageInfos:      file_testgen_testprotobuf_testdata_simple_message_proto_msgTypes,
+		GoTypes:           file_testgen_proto_testdata_simple_message_proto_goTypes,
+		DependencyIndexes: file_testgen_proto_testdata_simple_message_proto_depIdxs,
+		MessageInfos:      file_testgen_proto_testdata_simple_message_proto_msgTypes,
 	}.Build()
-	File_testgen_testprotobuf_testdata_simple_message_proto = out.File
-	file_testgen_testprotobuf_testdata_simple_message_proto_rawDesc = nil
-	file_testgen_testprotobuf_testdata_simple_message_proto_goTypes = nil
-	file_testgen_testprotobuf_testdata_simple_message_proto_depIdxs = nil
+	File_testgen_proto_testdata_simple_message_proto = out.File
+	file_testgen_proto_testdata_simple_message_proto_rawDesc = nil
+	file_testgen_proto_testdata_simple_message_proto_goTypes = nil
+	file_testgen_proto_testdata_simple_message_proto_depIdxs = nil
 }
