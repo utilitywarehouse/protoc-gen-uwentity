@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "proto/uw/entity/v1/identifier.proto";
-import "testdata/simple_message.proto";
+import "testgen/proto/testdata/simple_message.proto";
 option go_package = "/testdata";
 
 package testdata;

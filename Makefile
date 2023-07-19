@@ -12,10 +12,10 @@ format:
 	buf format proto -w
 
 clean:
-	rm -rf testgen/
+	rm -rf testgen/testdata/
 
 test: clean
-	mkdir -p testgen
+	mkdir -p testgen/testdata/
 	go build -o protoc-gen-uwentity main.go
-	protoc --plugin=protoc-gen-uwentity --uwentity_out=./testgen --go_out=./testgen testdata/*.proto
+	protoc --plugin=protoc-gen-uwentity --uwentity_out=./testgen --go_out=./testgen testgen/proto/testdata/*.proto
 	go test ./...
