@@ -17,5 +17,5 @@ clean:
 test: clean
 	mkdir -p testgen/testdata/
 	go build -o protoc-gen-uwentity main.go
-	protoc --plugin=protoc-gen-uwentity --uwentity_out=./testgen --go_out=./testgen testgen/proto/testdata/*.proto
+	protoc --plugin=protoc-gen-uwentity --uwentity_out=./testgen --go_out=./testgen testgen/testprotobuf/testdata/*.proto
 	go test ./...
