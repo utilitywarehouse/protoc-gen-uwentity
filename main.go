@@ -22,7 +22,7 @@ var (
 var tmpl = `
 // GetEntityIdentifier returns the value from the field marked as the identifier
 func (m *%s) GetEntityIdentifier() string {
-	return m.%s
+	return %s
 }
 `
 
@@ -35,6 +35,7 @@ type identifier struct {
 	message string
 	// the Field on the message which should be used as the identifier
 	identifier string
+	converter  string
 }
 
 func main() {
@@ -112,9 +113,26 @@ func main() {
 				continue
 			}
 
+			var needsStrconv bool
+			for _, ident := range idents {
+				if ident.converter != "" {
+					needsStrconv = true
+					break
+				}
+			}
+
+			if needsStrconv {
+				output.P()
+				output.P("import \"strconv\"")
+			}
+
 			// output identifier accessing methods, checking that we support the field type
 			for _, ident := range idents {
-				output.P(fmt.Sprintf(tmpl, ident.message, ident.identifier))
+				if ident.converter != "" {
+					output.P(fmt.Sprintf(tmpl, ident.message, fmt.Sprintf(ident.converter, "m."+ident.identifier)))
+				} else {
+					output.P(fmt.Sprintf(tmpl, ident.message, "m."+ident.identifier))
+				}
 			}
 		}
 
@@ -135,8 +153,14 @@ func getMessageIdentifier(entity string, msg *protogen.Message, fields ...string
 			return identifier{}, fmt.Errorf("repeated fields are not supported on %s: %s: %w", entity, field.Desc.Kind(), errUnsupportedField)
 		}
 
-		var value string
+		var value, converter string
 		switch field.Desc.Kind() {
+		case protoreflect.Int64Kind:
+			value = fmt.Sprintf("Get%s()", field.GoName)
+			converter = `strconv.FormatInt(%s, 10)`
+		case protoreflect.Int32Kind:
+			value = fmt.Sprintf("Get%s()", field.GoName)
+			converter = `strconv.FormatInt(int64(%s), 10)`
 		case protoreflect.StringKind:
 			value = fmt.Sprintf("Get%s()", field.GoName)
 		case protoreflect.EnumKind:
@@ -157,6 +181,7 @@ func getMessageIdentifier(entity string, msg *protogen.Message, fields ...string
 			return identifier{
 				message:    entity,
 				identifier: strings.Join(append(fields, value), "."),
+				converter:  converter,
 			}, nil
 		default:
 			return identifier{}, fmt.Errorf("unsupported field type on %s: %s: %w", entity, field.Desc.Kind(), errUnsupportedField)
@@ -165,6 +190,7 @@ func getMessageIdentifier(entity string, msg *protogen.Message, fields ...string
 		return identifier{
 			message:    entity,
 			identifier: strings.Join(append(fields, value), "."),
+			converter:  converter,
 		}, nil
 	}
 
