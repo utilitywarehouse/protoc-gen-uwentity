@@ -73,7 +73,7 @@ func main() {
 					continue
 				}
 
-				messageIdentifier, err := getMessageIdentifier(string(msg.Desc.Name()), msg)
+				messageIdentifier, err := getMessageIdentifier(msg.GoIdent.GoName, msg)
 				switch {
 				default:
 					return err
