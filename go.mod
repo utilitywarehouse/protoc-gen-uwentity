@@ -1,11 +1,13 @@
 module github.com/utilitywarehouse/protoc-gen-uwentity
 
-go 1.20
+go 1.21
+
+toolchain go1.23.3
 
 require (
 	github.com/bufbuild/buf v1.30.0
 	github.com/stretchr/testify v1.9.0
-	google.golang.org/protobuf v1.33.0
+	google.golang.org/protobuf v1.36.1
 )
 
 require (
