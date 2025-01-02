@@ -1,8 +1,10 @@
-syntax = "proto3";
+edition = "2023";
 
 import "proto/uw/entity/v1/identifier.proto";
+import "google/protobuf/go_features.proto";
 
 option go_package = "/testdata";
+option features.(pb.go).api_level = API_HYBRID;
 
 package testdata;
 

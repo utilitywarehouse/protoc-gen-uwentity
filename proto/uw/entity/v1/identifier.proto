@@ -1,10 +1,12 @@
-syntax = "proto3";
+edition = "2023";
 
 package uw.entity.v1;
 
 import "google/protobuf/descriptor.proto";
+import "google/protobuf/go_features.proto";
 
 option go_package = "github.com/utilitywarehouse/protoc-gen-uwentity/gen/uw/entity/v1;entity";
+option features.(pb.go).api_level = API_HYBRID;
 
 extend google.protobuf.MessageOptions {
   // Skip checking or generating for this message

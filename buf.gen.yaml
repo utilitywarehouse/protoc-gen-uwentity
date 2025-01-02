@@ -1,5 +1,5 @@
 version: v1
 plugins:
-  - plugin: buf.build/bufbuild/connect-go:v1.3.1
+  - plugin: buf.build/grpc/go:v1.5.1
     out: gen
     opt: paths=source_relative
