@@ -1,6 +1,6 @@
 module github.com/utilitywarehouse/protoc-gen-uwentity
 
-go 1.20
+go 1.23.5
 
 require (
 	github.com/bufbuild/buf v1.30.0
