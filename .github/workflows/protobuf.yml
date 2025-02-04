@@ -12,7 +12,7 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
       - name: Setup Buf cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/buf
           key: ${{ runner.os }}-buf-${{ inputs.version }}-${{ hashFiles('proto/buf.lock') }}
@@ -35,7 +35,7 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
       - name: Setup Buf cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/buf
           key: ${{ runner.os }}-buf-${{ inputs.version }}-${{ hashFiles('proto/buf.lock') }}
@@ -60,7 +60,7 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
       - name: Setup Buf cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/buf
           key: ${{ runner.os }}-buf-${{ inputs.version }}-${{ hashFiles('proto/buf.lock') }}
@@ -82,7 +82,7 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
       - name: Setup Buf cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/buf
           key: ${{ runner.os }}-buf-${{ inputs.version }}-${{ hashFiles('proto/buf.lock') }}
