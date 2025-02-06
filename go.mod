@@ -7,7 +7,7 @@ toolchain go1.23.5
 require (
 	github.com/bufbuild/buf v1.50.0
 	github.com/stretchr/testify v1.10.0
-	google.golang.org/protobuf v1.36.4
+	google.golang.org/protobuf v1.36.5
 )
 
 require (
