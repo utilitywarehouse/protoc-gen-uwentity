@@ -22,7 +22,7 @@ jobs:
             ${{ runner.os }}-buf-
       - name: Install Buf
         run: go install github.com/bufbuild/buf/cmd/buf
-      - uses: bufbuild/buf-push-action@v1
+      - uses: bufbuild/buf-action@v1
         with:
-          buf_token: ${{ secrets.BUF_TOKEN }}
+          token: ${{ secrets.BUF_TOKEN }}
           input: proto
