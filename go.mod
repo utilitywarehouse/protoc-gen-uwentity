@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/bufbuild/buf v1.57.2
 	github.com/stretchr/testify v1.11.1
-	google.golang.org/protobuf v1.36.9
+	google.golang.org/protobuf v1.36.11
 )
 
 require (
